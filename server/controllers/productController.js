@@ -1,8 +1,12 @@
 const { Error } = require('mongoose');
 const Product  = require('../models/product')
 const mongoose = require('mongoose')
-const ErrorHandler = require('../util/errorHandler')
-const APIFeatrures = require('../util/APIFeatures')
+const ErrorHandler = require('../utils/errorHandler')
+const APIFeatures = require('../utils/apiFeatures')
+
+
+
+const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
 
 // add products => /product/new
@@ -29,14 +33,26 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
     let filteredProductsCount = products.length;
 
     apiFeatures.pagination(resPerPage)
-    products = await apiFeatures.query;
+   
 
 
     res.status(200).json({
         success: true,
         productsCount,
-        resPerPage,
+        // resPerPage,
         filteredProductsCount,
+        products
+    })
+
+})
+
+// Get all products (Admin)  =>   /api/v1/admin/products
+exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+
+    const products = await Product.find();
+
+    res.status(200).json({
+        success: true,
         products
     })
 
