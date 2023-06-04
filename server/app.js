@@ -17,5 +17,5 @@ app.use(errorMiddleware);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-module.exports = app;
+module.exports = app
 

@@ -1,41 +1,20 @@
 const { Error } = require('mongoose');
-const mongoose = require('mongoose');
 const Product  = require('../models/product')
 const ErrorHandler = require('../util/errorHandler')
-const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
-const APIfeatures = require('../util/apiFeatures')
-
+const mongoose = require('mongoose');
 
 // add products => /product/new
-exports.newProduct = catchAsyncErrors(async (req,res,next)=>{
+exports.newProduct = async (req,res,next)=>{
+    const product = await Product.create(req.body);
     
-   
-    const apiFeatures = new APIFeatures(Product.find(), req.query)
-        .search()
-        .filter()
-
-    let products = await apiFeatures.query;
-    let filteredProductsCount = products.length;
-
-    apiFeatures.pagination(resPerPage)
-    products = await apiFeatures.query;
-
-
-    res.status(200).json({
-        success: true,
-        productsCount,
-        resPerPage,
-        filteredProductsCount,
-        products
-    })
     res.status(201).json({
         success : true,
         product
     })
-})
+}
 
 // get all product => /products
-exports.getProducts =catchAsyncErrors( async (req,res,next)=>{
+exports.getProducts = async (req,res,next)=>{
 
     const products = await Product.find();
 
@@ -45,11 +24,11 @@ exports.getProducts =catchAsyncErrors( async (req,res,next)=>{
         products
 
     })
-})
+}
 
 // get a single product => /products/:id
 
-exports.getSingleProduct = catchAsyncErrors(async (req,res,next)=>{
+exports.getSingleProduct = async (req,res,next)=>{
 
     const isValidId = mongoose.Types.ObjectId.isValid(req.params.id);
     if(!isValidId){
@@ -60,14 +39,14 @@ exports.getSingleProduct = catchAsyncErrors(async (req,res,next)=>{
         success: true,
         product
     })
-})
+}
    
     
 
     
 
 // update  => /products/update/:id
-exports.updateProduct =catchAsyncErrors(async (req,res,next)=>{
+exports.updateProduct = async (req,res,next)=>{
 
     const isValidId = mongoose.Types.ObjectId.isValid(req.params.id);
     
@@ -89,11 +68,11 @@ exports.updateProduct =catchAsyncErrors(async (req,res,next)=>{
     
 
 
-})
+}
 
 // update  => /admin/products/delete/:id
 
-exports.deleteProduct =catchAsyncErrors( async (req,res,next)=>{
+exports.deleteProduct = async (req,res,next)=>{
     
     const isValidId = mongoose.Types.ObjectId.isValid(req.params.id);
     if(!isValidId){
@@ -107,4 +86,4 @@ exports.deleteProduct =catchAsyncErrors( async (req,res,next)=>{
         success: true,
         product
     })
-})
+}
