@@ -6,8 +6,25 @@ dotenv.config({path:`config/.env`})
 
 connectDatabase();
 
+// Handle Uncaught exceptions
+process.on('uncaughtException', err => {
+  console.log(`ERROR: ${err.stack}`);
+  console.log('Shutting down due to uncaught exception');
+  process.exit(1)
+})
 
 
-app.listen(process.env.PORT, function() {
-    console.log(`Server started on port ${process.env.PORT}`);
-  });
+
+
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Server started on PORT: ${process.env.PORT} in ${process.env.NODE_ENV} mode.`)
+})
+
+// Handle Unhandled Promise rejections
+process.on('unhandledRejection', err => {
+  console.log(`ERROR: ${err.stack}`);
+  console.log('Shutting down the server due to Unhandled Promise rejection');
+  server.close(() => {
+      process.exit(1)
+  })
+})
